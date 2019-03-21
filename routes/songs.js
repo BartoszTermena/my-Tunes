@@ -15,23 +15,14 @@ router.get('/:slug', async (req, res, next) => {
 router.get('/', async (req, res) => {
     try {
         const songsPromise = Song.paginate({
-            limit: req.query.per_page || 2,
+            limit: req.query.per_page || 5,
             previous: req.query.previous || null,
             next: req.query.next || null
         });
         const countPromise = Song.count()
         const [songs, count] = await Promise.all([songsPromise, countPromise])
         
-        const links = {};
-        if (songs.hasNext) {
-            links.next = `${req.protocol}://${req.get('host')}${req.path}?next=${songs.next}`;
-        }
-        if (songs.hasPrevious) {
-            links.previous = `${req.protocol}://${req.get('host')}${req.path}?previous=${songs.previous}`;
-        }
-        res.links(links);
-        res.set('total-count', count);
-        return res.status(200).send( songs.results );
+        return res.status(200).send( { data: songs, count } );
     } catch (e) {
         res.status(404).send({ message: err });
     }
