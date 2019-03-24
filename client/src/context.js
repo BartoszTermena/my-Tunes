@@ -19,7 +19,7 @@ class ProductProvider extends Component {
     createdBy: ''
   }
   fetchSongs(){
-    axios.get('http://localhost:8080/songs')
+    axios.get('/songs')
     .then(res => {
       this.setState({
         songs: res.data.data,
@@ -41,7 +41,7 @@ class ProductProvider extends Component {
  }
  handleSubmitCreatedSong = e => {
     e.preventDefault();
-    axios.post('http://localhost:8080/songs', {
+    axios.post('/songs', {
       title: this.state.createdTitle,
       genre: this.state.createdGenre,
       createdBy: this.state.createdBy
@@ -65,7 +65,7 @@ class ProductProvider extends Component {
    }, () => {
     const { offset, per_page } = this.state;
     let link;
-    link = `http://localhost:8080/songs?offset=${offset}&per_page=${per_page}`
+    link = `/songs?offset=${offset}&per_page=${per_page}`
     axios.get(link)
     .then(res => {
       this.setState({
@@ -87,7 +87,7 @@ class ProductProvider extends Component {
     }, () => {
      const { offset, per_page } = this.state;
      let link;
-     link = `http://localhost:8080/songs?offset=${offset}&per_page=${per_page}`
+     link = `/songs?offset=${offset}&per_page=${per_page}`
      axios.get(link)
      .then(res => {
        console.log(res)
@@ -112,7 +112,7 @@ class ProductProvider extends Component {
       console.log(this.state)
      const { search } = this.state;
      let link;
-     link = `http://localhost:8080/songs?q=${search}`
+     link = `/songs?q=${search}`
      axios.get(link)
      .then(res => {
        if(res.data.data.length > 0) {
@@ -138,7 +138,7 @@ class ProductProvider extends Component {
       }, () => {
         const { genre } = this.state;
         let link;
-        link = `http://localhost:8080/songs?genre=${genre}`
+        link = `/songs?genre=${genre}`
         if(genre.length > 0) {
         axios.get(link)
         .then(res => {
