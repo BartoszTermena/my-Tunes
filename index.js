@@ -1,11 +1,9 @@
 const express = require('express')
-const cors = require('cors')
 const mongoose = require('mongoose')
 const songs = require('./routes/songs')
 const path = require('path')
 
 const app = express()
-app.use(cors())
 app.use(express.json())
 
 const mongoDB = `mongodb+srv://user:4qcit6iAs8LRXOzM@cluster0-lo20j.mongodb.net/test?retryWrites=true`
