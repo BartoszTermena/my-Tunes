@@ -7,11 +7,16 @@ const SongSchema = new Schema({
     title: {
         type: String,
         required: true
+        },
+        genre: {
+            type: String,
+            required: true
         }
     },
     {
         timestamps: true
 })
+SongSchema.index({ title: 'text' })
 
 SongSchema.plugin(URLSlugs('title', { field: 'slug', update: true }))
 SongSchema.plugin(mongoPagination.mongoosePlugin);

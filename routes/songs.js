@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Song = require('../models/Song')
+const getFilters = require('../middleware/filters/songs')
 
 router.get('/:slug', async (req, res, next) => {
     try {
@@ -12,14 +13,19 @@ router.get('/:slug', async (req, res, next) => {
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', getFilters, async (req, res) => {
     try {
-        const songsPromise = Song.paginate({
-            limit: req.query.per_page || 5,
-            previous: req.query.previous || null,
-            next: req.query.next || null
-        });
-        const countPromise = Song.count()
+        let sort_by = {}
+        sort_by[req.query.sort_by || 'createdAt'] = req.query.order_by || 'desc';
+        if (req.query.q) sort_by = { score: { $meta: 'textScore' } }
+        const offset = parseInt(req.query.offset) || 0;
+        const per_page = parseInt(req.query.per_page) || 2;
+        const songsPromise = 
+            Song.find(req.filters, { score: {$meta: 'textScore' } })
+            .skip(offset)
+            .limit(per_page)
+            .sort(sort_by);
+        const countPromise = Song.count(req.filters)
         const [songs, count] = await Promise.all([songsPromise, countPromise])
         
         return res.status(200).send( { data: songs, count } );
@@ -31,7 +37,8 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const newSong = await new Song({
-            title: req.body.title
+            title: req.body.title,
+            genre: req.body.genre
         }).save();
         return res.status(201).send({ data: newSong, message: 'Song was created'})
     } catch (e) {

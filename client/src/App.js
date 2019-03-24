@@ -6,21 +6,16 @@ class App extends Component {
   state = {
     songs: [],
     count: 0,
-    hasNext: null,
-    hasPrevious: null,
-    next: null,
-    previous: null
+    offset: 0,
+    per_page: 2
   }
   fetchSongs(){
     axios.get('http://localhost:8080/songs/')
     .then(res => {
+      console.log(res)
       this.setState({
-        songs: res.data.data.results,
-        count: res.data.count,
-        hasNext: res.data.data.hasNext,
-        hasPrevious: res.data.data.hasPrevious,
-        next: res.data.data.next,
-        previous: res.data.data.previous
+        songs: res.data.data,
+        count: res.data.count
       })
     })
     .catch(err => {
@@ -30,30 +25,52 @@ class App extends Component {
   componentDidMount(){
     this.fetchSongs();
  }
- handlePagination = (e) => {
-   let link;
-   if (e === 'next'){
-     link = `http://localhost:8080/songs?${e}=${this.state.next}`
-   } else if (e === 'previous') {
-    link = `http://localhost:8080/songs?${e}=${this.state.previous}`
-   }
-  axios.get(link)
-  .then(res => {
-    this.setState({
-      songs: res.data.data.results,
-      count: res.data.count,
-      hasNext: res.data.data.hasNext,
-      hasPrevious: res.data.data.hasPrevious,
-      next: res.data.data.next,
-      previous: res.data.data.previous
+ handleNext = () => {
+   if(this.state.offset < this.state.count - this.state.per_page) {
+   this.setState((prevState) => {
+      return {offset: prevState.offset + 2}
+   }, () => {
+    const { offset, per_page } = this.state;
+    let link;
+    link = `http://localhost:8080/songs?offset=${offset}&per_page=${per_page}`
+    axios.get(link)
+    .then(res => {
+      console.log(res)
+      this.setState({
+        songs: res.data.data,
+        count: res.data.count
+      })
     })
-  })
-  .catch(err => {
-    console.log(err)
-  })
- }
+    .catch(err => {
+      console.log(err)
+    })
+   })
+  } else return
+  }
+  handlePrev = () => {
+    if(this.state.offset > 0) {
+    this.setState((prevState) => {
+       return {offset: prevState.offset - 1}
+    }, () => {
+     const { offset, per_page } = this.state;
+     let link;
+     link = `http://localhost:8080/songs?offset=${offset}&per_page=${per_page}`
+     axios.get(link)
+     .then(res => {
+       console.log(res)
+       this.setState({
+         songs: res.data.data,
+         count: res.data.count
+       })
+     })
+     .catch(err => {
+       console.log(err)
+     })
+    })
+   } else return
+   }
   render() {
-    const { songs, count, hasNext, hasPrevious, next, previous } = this.state;
+    const { songs, count } = this.state;
     if( count > 0 ) {
       return (
         <div className="App">
@@ -69,8 +86,9 @@ class App extends Component {
           <br />
           {count}
           <br />
-          {hasNext ? <button onClick={() => this.handlePagination('next')}>next</button> : null}
-          {hasPrevious ? <button onClick={() => this.handlePagination('previous')}>prev</button> : null}
+          <button onClick={() => this.handlePrev()}>prev</button>
+          <button onClick={() => this.handleNext()}>next</button>
+
         </div>
       );
     }
