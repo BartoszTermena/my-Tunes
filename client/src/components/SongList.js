@@ -3,6 +3,7 @@ import { ProductConsumer } from '../context';
 import Search from './filters/Search'
 import Genre from './filters/Genre'
 import Pagination from './filters/Pagination'
+import Loader from './loader/Loader'
 
 
 export default class SongList extends Component {
@@ -15,28 +16,43 @@ export default class SongList extends Component {
             if(songs.length > 0) {
                 view = (<div className="App">
                 
-                  { msg ? msg : 
+                  { msg ? <h3>{msg}</h3> : 
                     songs.map(song => {
                       return (
                         <ul key={song._id}>
-                          <li>{song.title}</li>
+                          <li>
+                              <h4>{song.title}</h4>
+                          </li>
                         </ul>
                       )
                     })
                   }
                   <br />
-                  {count}                  
+                  <Pagination />
+                  <p className="flow-text">All songs: {count}</p>                
                 </div>)
             } else {
-                view = <div>Loading...</div>
+                view = <div className="App">
+                <Loader />
+                </div>
             }
             return (
-                <>
-                <Search />
-                <Genre />
-                {view}
-                <Pagination />
-                </>
+                <div className="container">
+                <div className="row">
+                    <div className="col s6">
+                         <Genre />
+                    </div>
+                    <div className="col s6">
+                        <Search />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col s12">
+                    {view}
+                    </div>
+                </div>
+
+                </div>
             )
         }}
          </ProductConsumer>
