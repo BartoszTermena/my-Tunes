@@ -38,7 +38,8 @@ router.post('/', async (req, res) => {
     try {
         const newSong = await new Song({
             title: req.body.title,
-            genre: req.body.genre
+            genre: req.body.genre,
+            createdBy: req.body.createdBy
         }).save();
         return res.status(201).send({ data: newSong, message: 'Song was created'})
     } catch (e) {

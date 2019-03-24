@@ -8,9 +8,13 @@ const SongSchema = new Schema({
         type: String,
         required: true
         },
-        genre: {
-            type: String,
-            required: true
+    genre: {
+        type: String,
+        required: true
+        },
+    createdBy: {
+        type: String,
+        required: true
         }
     },
     {
