@@ -9,11 +9,11 @@ export default class Search extends Component {
         {(value) => {
             return (
               <div>
-                <div className="input-field col s9">
+                <div className="input-field col s11">
                 <input type="text" placeholder="search" onChange={(e) => {value.handleSearch(e)}}/>
                 <label htmlFor="icon_prefix2">Search Song</label>
               </div>    
-              <div className="input-field col s3">
+              <div className="input-field col s1">
                 <button 
                 onClick={(e) => {value.handleSubmit(e)}}
                 className="btn waves-effect waves-light" type="submit" name="action">

@@ -16,6 +16,8 @@ export default class Genre extends Component {
                     <option value="">All</option>
                     <option value="heavy_metal">Heavy Metal</option>
                     <option value="rap">Rap</option>
+                    <option value="pop">Pop</option>
+                    <option value="rock">Rock</option>
                 </select>
               </div>
               )

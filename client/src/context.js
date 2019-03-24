@@ -13,10 +13,13 @@ class ProductProvider extends Component {
     offset: 0,
     per_page: 2,
     msg: '',
-    genre: ''
+    genre: '',
+    createdTitle: '',
+    createdGenre: '',
+    createdBy: ''
   }
   fetchSongs(){
-    axios.get('http://localhost:8080/songs/')
+    axios.get('http://localhost:8080/songs')
     .then(res => {
       this.setState({
         songs: res.data.data,
@@ -30,6 +33,30 @@ class ProductProvider extends Component {
   }
   componentDidMount(){
     this.fetchSongs();
+ }
+ handleCreate = (e) => {
+  this.setState({
+    [e.target.name]: e.target.value
+  }) 
+ }
+ handleSubmitCreatedSong = e => {
+    e.preventDefault();
+    axios.post('http://localhost:8080/songs', {
+      title: this.state.createdTitle,
+      genre: this.state.createdGenre,
+      createdBy: this.state.createdBy
+    })
+    .then(res => {
+      this.fetchSongs()
+      this.setState({
+        createdTitle: '',
+        createdGenre: '',
+        createdBy: ''
+      })
+    })
+    .catch(err => {
+      console.log(err);
+    });
  }
  handleNext = () => {
    if(this.state.offset < this.state.count - this.state.per_page) {
@@ -140,6 +167,8 @@ class ProductProvider extends Component {
       <ProductContext.Provider 
       value={{
         ...this.state,
+        handleCreate: this.handleCreate,
+        handleSubmitCreatedSong: this.handleSubmitCreatedSong,
         fetchSongs: this.fetchSongs,
         handleNext: this.handleNext,
         handlePrev:this.handlePrev,

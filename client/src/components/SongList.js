@@ -4,7 +4,7 @@ import Search from './filters/Search'
 import Genre from './filters/Genre'
 import Pagination from './filters/Pagination'
 import Loader from './loader/Loader'
-
+import Create from './Create'
 
 export default class SongList extends Component {
   render() {
@@ -51,7 +51,7 @@ export default class SongList extends Component {
                     {view}
                     </div>
                 </div>
-
+                  <Create />
                 </div>
             )
         }}
